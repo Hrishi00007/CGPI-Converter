@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPI Converter</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="manifest.json">
+    <link rel="shortcut icon" href="favicon.ico.png" type="image/x-icon">
+    <link rel="manifest" href="/manifest.json">
+
+</head>
+
+<body>
+    <header>
+        <h1>CGPI Converter</h1>
+    </header>
+    <main>
+        <section id="universitySelection">
+            <h2>Select University</h2>
+            <label for="university">Choose a University:</label>
+            <select id="university">
+                <option value="mumbai">Mumbai University</option>
+                <option value="pune">Pune University</option>
+            </select>
+        </section>
+        <section id="pointerInput">
+            <h2>Enter Your Pointers</h2>
+            <label for="pointerList">Pointers:</label>
+            <input type="text" id="pointerList" placeholder="Enter pointers separated by commas (e.g., 8.5, 9.0, 7.2)">
+            <button id="calculateButton">Calculate CGPI & Percentage</button>
+        </section>
+        <section id="result">
+            <h2>CGPI & Percentage Result</h2>
+            <p id="cgpiValue">Your CGPI will be calculated here.</p>
+            <p id="percentageValue">Your Percentage will be calculated here.</p>
+        </section>
+        <button id="installButton" style="display: none;">Install App</button>
+    </main>
+    <footer>
+        <p>&copy; 2023 CGPI Converter</p>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                .register('sw.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+    </script>
+    <script>
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', event => {
+            event.preventDefault();
+            deferredPrompt = event;
+            document.getElementById('installButton').style.display = 'block';
+        });
+
+        document.getElementById('installButton').addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choiceResult => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the installation');
+                    } else {
+                        console.log('User dismissed the installation');
+                    }
+                    deferredPrompt = null; // Reset deferredPrompt
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
